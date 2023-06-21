@@ -17,6 +17,8 @@ class ConverterBackendServer {
     app.use(express.urlencoded({ extended: false }));
     const authorization = new Authorization(app);
 
+    app.get('/getCurrencies', this._getCurrencies);
+    app.get('/converter/:amount/:currency1/:currency2', this._converter);
     app.get('/login/', this._login);
     app.get('/', authorization.checkAuthenticated, this._goHome);
 
@@ -36,7 +38,7 @@ class ConverterBackendServer {
    })
    
     // Start server
-    app.listen(3001, () => console.log('Listening on port 3001'));
+    app.listen(3000, () => console.log('Listening on port 3000'));
   }
 
   async _login(req, res) {
@@ -46,6 +48,26 @@ class ConverterBackendServer {
   async _goHome(req, res) {
     res.sendFile(path.join(__dirname, "public/home.html"));
   }
+
+async _getCurrencies(req, res){
+  const host = 'api.frankfurter.app';
+  return fetch(`https://${host}/currencies`)
+  .then(response => response.json())
+  .then(data => {
+    res.json(data); 
+  })
+}
+
+async _converter(req, res){
+  const host = 'api.frankfurter.app';
+  return fetch(`https://${host}/latest?amount=${req.params.amount}&from=${req.params.currency1}&to=${req.params.currency2}`)
+  .then(response => response.json())
+  .then(val =>{
+    res.json(val);
+  })
+
+}
+
 }
 
 new ConverterBackendServer();

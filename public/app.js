@@ -2,8 +2,8 @@ var select = document.querySelectorAll('.currency'),
 input_currency = document.getElementById('input_currency'),
 output_currency = document.getElementById('output_currency');
 
-const host = 'api.frankfurter.app';
-fetch(`https://${host}/currencies`)
+const host = "/getCurrencies";
+fetch(host)
   .then((data) => data.json())
   .then((data) => {
     const entries = Object.entries(data);
@@ -20,8 +20,8 @@ fetch(`https://${host}/currencies`)
     if(select[0].value != select[1].value){
     
       //  alert("Bien")
-      const host = 'api.frankfurter.app';
-      fetch(`https://${host}/latest?amount=${input_currency_val}&from=${select[0].value}&to=${select[1].value}`)
+      const host = '/converter/'+input_currency_val+'/'+select[0].value+'/'+select[1].value;
+      fetch(host)
         .then((val) => val.json())
         .then((val) => {
           output_currency.value= Object.values(val.rates)[0]
