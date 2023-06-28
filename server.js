@@ -20,6 +20,7 @@ class ConverterBackendServer {
     app.get('/getCurrencies', this._getCurrencies);
     app.get('/converter/:amount/:currency1/:currency2', this._converter);
     app.get('/login/', this._login);
+    app.post('/save/', this._Save);
     app.get('/', authorization.checkAuthenticated, this._goHome);
 
     // aca empieza el cambio
@@ -65,7 +66,15 @@ async _converter(req, res){
   .then(val =>{
     res.json(val);
   })
+}
 
+async _Save(req, res) {
+  const query = { conversion: req.body.conversion.toLowerCase() };
+  const update = { $set: { definition: req.body.definition } };
+  const params = { upsert: true };
+  const collection = db.collection("converter");
+  await collection.updateOne(query, update, params);
+  res.json({ success: true });
 }
 
 }
