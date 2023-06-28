@@ -69,11 +69,10 @@ async _converter(req, res){
 }
 
 async _Save(req, res) {
-  const query = { conversion: req.body.conversion.toLowerCase() };
-  const update = { $set: { definition: req.body.definition } };
-  const params = { upsert: true };
+  console.log("Enviando dato");
+  const query = { conversion: req.body};
   const collection = db.collection("converter");
-  await collection.updateOne(query, update, params);
+  await collection.insertOne(query);
   res.json({ success: true });
 }
 
